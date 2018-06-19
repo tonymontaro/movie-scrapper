@@ -2,7 +2,7 @@
 [![codecov](https://codecov.io/gh/tonymontaro/movie-scrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/tonymontaro/movie-scrapper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2353a8d56f839e175b4f/maintainability)](https://codeclimate.com/github/tonymontaro/movie-scrapper/maintainability)
 
-# flask-starter-kit
+# Simple movie scrapper API 
 A simple movies scrapper API that scraps and displays results from the [Silver Bird, Accra website.](https://silverbirdcinemas.com/cinema/accra/)
 
 
@@ -24,7 +24,6 @@ Api documentation: [Generated with Postman](https://documenter.getpostman.com/vi
 
 - [Flask-SQLAlchemy](http://flask-sqlalchemy.pocoo.org/2.3/) - For database management.
 - [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) - For migrations.
-- [Flask-Login](https://flask-login.readthedocs.io/en/latest/) - For authentication.
 - [Pytest](https://docs.pytest.org/en/latest/) - For testing.
 - [APScheduler](https://apscheduler.readthedocs.io/en/latest/userguide.html) - For scheduling.
 
