@@ -9,15 +9,21 @@ movies_bp = Blueprint('api', __name__)
 
 @movies_bp.route('/', methods=['GET'], strict_slashes=False)
 def home():
-    """Get movies for the week, refreshes every week."""
+    """Get movies, refreshes every week.
+    Movies can be filtered by with a query argument (q=search_term).
+    Movies can also be sorted by name or time.
+    Both sorting and filtering can be combined.
+    """
     movies = Movie.get_all()
     if not movies:
-        movies = scrape_movies()
-        [Movie.save(**movie) for movie in movies]
-    else:
-        movies = [movie.get_content() for movie in movies]
+        scrape_movies()
+        movies = Movie.get_all()
 
-    return jsonify(movies), 200
+    search = request.args.get('q')
+    if search:
+        movies = Movie.find(search)
+
+    return jsonify([movie.get_content() for movie in movies]), 200
 
 
 @movies_bp.route('/<int:id_>', methods=['GET'])
