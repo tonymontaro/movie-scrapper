@@ -1,7 +1,12 @@
+"""Movie helper module."""
+
 import re
 from urllib.request import urlopen
+import atexit
 
 from bs4 import BeautifulSoup
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 
 from app.models import Movie
 
@@ -29,8 +34,22 @@ def scrape_movies():
 
 
 def get_earliest_movie_time(movie_time):
-    days = ['MON', 'TUE', 'WED', 'THUR', 'FRI']
+    """Get the earliest date and time this week for a movie"""
+    days = ['MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT', 'SUN']
 
     day = re.search(r'{}'.format('|'.join(days)), str(movie_time)).group()
     start_time = re.search(r'\d+:\d+', str(movie_time)).group()
     return days.index(day), start_time
+
+
+def schedule_scrapping():
+    """Schedule scrapping the movies website every week"""
+    scheduler = BackgroundScheduler()
+    scheduler.start()
+    scheduler.add_job(
+        func=scrape_movies,
+        trigger=IntervalTrigger(days=7),
+        id='printing_job',
+        name='Print date and time every five seconds',
+        replace_existing=True)
+    atexit.register(lambda: scheduler.shutdown())

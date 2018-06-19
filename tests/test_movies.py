@@ -1,4 +1,4 @@
-"""Module for testing the user registration and login."""
+"""Module for testing the Movie-Scrapper API."""
 import unittest
 
 from app import create_app, db
@@ -7,7 +7,7 @@ from tests.helpers import get_json
 
 
 class MovieTestCase(unittest.TestCase):
-    """Movie tests."""
+    """Movie Scrapper API tests."""
     app = None
 
     def setUp(self):

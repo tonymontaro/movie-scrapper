@@ -11,7 +11,7 @@ login_manager = LoginManager()
 
 from config import app_config
 from app.movies.routes import movies_bp
-from app.movies.helper import scrape_movies
+from app.movies.helper import scrape_movies, schedule_scrapping
 
 
 def create_app(env):
@@ -28,8 +28,12 @@ def create_app(env):
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def catch_all(path):
-        """Homepage and default page."""
+        """Homepage and default page. Redirect non-existent urls here."""
         return jsonify({'message': 'Welcome to movie-scrapper API.'})
+
+    @app.before_first_request
+    def init_app():
+        schedule_scrapping()
 
     return app
 
