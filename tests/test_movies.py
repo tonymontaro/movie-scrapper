@@ -8,20 +8,27 @@ from tests.helpers import get_json
 
 class MovieTestCase(unittest.TestCase):
     """Movie tests."""
+    app = None
 
     def setUp(self):
         """Setup test client."""
-        self.app = create_app("testing")
+        self.app = MovieTestCase.app
         self.client = self.app.test_client()
-        with self.app.app_context():
+
+    @classmethod
+    def setUpClass(cls):
+        cls.app = create_app("testing")
+        with cls.app.app_context():
             db.session.close()
+            db.drop_all()
+            db.create_all()
 
     def test_get_movies(self):
         """Test getting all movies."""
         res = self.client.get('/movies')
         assert res.status_code == 200
         result = get_json(res)
-        assert len(result) > 1
+        assert len(result) == 10
         self.movie1 = result[0]
 
     def get_first_movie(self):
@@ -67,6 +74,12 @@ class MovieTestCase(unittest.TestCase):
             result, key=lambda movie: get_earliest_movie_time(movie))
         sorted_result_names = [x['name'] for x in sorted_result]
         assert [x['name'] for x in result] == sorted_result_names
+
+    @classmethod
+    def tearDownClass(cls):
+        with cls.app.app_context():
+            db.session.remove()
+            db.drop_all()
 
 
 if __name__ == "__main__":

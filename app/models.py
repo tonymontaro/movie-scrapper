@@ -12,12 +12,6 @@ class DBHelper(object):
         db.session.add(item)
         db.session.commit()
 
-    @staticmethod
-    def delete(item):
-        """Delete an item from the database."""
-        db.session.delete(item)
-        db.session.commit()
-
 
 class Movie(db.Model):
     """Movie model."""
