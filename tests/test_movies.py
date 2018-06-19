@@ -42,13 +42,20 @@ class MovieTestCase(unittest.TestCase):
         result = get_json(res)
         assert result['message'] == 'Movie not found.'
 
-    def test_search_movies_by_title(self):
+    def test_search_movies_by_name(self):
         """Test searching for movies by name."""
         movie1 = self.get_first_movie()
         res = self.client.get('/movies?q={}'.format(movie1['name']))
         assert res.status_code == 200
         result = get_json(res)
         assert result[0] == movie1
+
+    def test_sort_movies_by_name(self):
+        """Test that movies can be sorted by name."""
+        res = self.client.get('/movies?sort=name')
+        assert res.status_code == 200
+        result = get_json(res)
+        assert result == sorted(result, key=lambda x: x['name'])
 
 
 if __name__ == "__main__":
