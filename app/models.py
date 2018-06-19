@@ -1,8 +1,6 @@
 """Application models."""
-from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import db, login_manager
+from app import db
 
 
 class DBHelper(object):
@@ -14,62 +12,49 @@ class DBHelper(object):
         db.session.add(item)
         db.session.commit()
 
-    @staticmethod
-    def delete(item):
-        """Delete an item from the database."""
-        db.session.delete(item)
-        db.session.commit()
 
+class Movie(db.Model):
+    """Movie model."""
 
-class User(UserMixin, db.Model):
-    """User model, used for registration and login."""
-
-    __tablename__ = 'users'
+    __tablename__ = 'movies'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-
-    def set_password(self, password):
-        """Set user password hash."""
-        self.password = generate_password_hash(password)
-
-    def check_password(self, password):
-        """Verify user's password."""
-        return check_password_hash(self.password, password)
+    name = db.Column(db.String(255), nullable=False)
+    details = db.Column(db.Text())
+    time = db.Column(db.String(255))
+    duration = db.Column(db.String(255))
 
     @staticmethod
-    def register(email, password):
-        """Register a user."""
-        prev_user = User.query.filter_by(email=email).first()
-        if email and password and not prev_user:
-            user = User(email=email)
-            user.set_password(password)
-            DBHelper.add(user)
-            return user
+    def save(**kwargs):
+        """Save a movie."""
+        movie = Movie(**kwargs)
+        DBHelper.add(movie)
+
+    @staticmethod
+    def get_all():
+        """Get all movies."""
+        return Movie.query.all()
+
+    @staticmethod
+    def get(id_):
+        """Get a movie by ID."""
+        movie = Movie.query.get(id_)
+        if movie:
+            return movie
         return None
 
     @staticmethod
-    def get_user(email, password):
-        """Find and authenticate a user."""
-        user = User.query.filter_by(email=email).first()
-        if user and password and user.check_password(password):
-            return user
-        return None
+    def find(query):
+        """Find movies by search key."""
+        movies = Movie.query.filter(Movie.name.contains(query)).all()
+        return movies
 
-    @staticmethod
-    def get_by_id(id_, password):
-        """Find a user by id."""
-        user = User.query.get(id_)
-        if user and password and user.check_password(password):
-            return user
-        return None
-
-    def delete(self):
-        """Delete a user's account"""
-        return DBHelper.delete(self)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    """User loader for Flask-Login."""
-    return User.query.get(user_id)
+    def get_content(self):
+        """Return movie attributes and content as a dictionary."""
+        movie = {
+            'id': self.id,
+            'name': self.name,
+            'time': self.time,
+            'details': self.details,
+            'duration': self.duration
+        }
+        return movie
