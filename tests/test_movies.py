@@ -2,6 +2,7 @@
 import unittest
 
 from app import create_app, db
+from app.movies.helper import get_earliest_movie_time
 from tests.helpers import get_json
 
 
@@ -55,7 +56,17 @@ class MovieTestCase(unittest.TestCase):
         res = self.client.get('/movies?sort=name')
         assert res.status_code == 200
         result = get_json(res)
-        assert result == sorted(result, key=lambda x: x['name'])
+        assert result == sorted(result, key=lambda movie: movie['name'])
+
+    def test_sort_movies_by_time(self):
+        """Test that movies can be sorted by date."""
+        res = self.client.get('/movies?sort=time')
+        assert res.status_code == 200
+        result = get_json(res)
+        sorted_result = sorted(
+            result, key=lambda movie: get_earliest_movie_time(movie))
+        sorted_result_names = [x['name'] for x in sorted_result]
+        assert [x['name'] for x in result] == sorted_result_names
 
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
+import re
 from urllib.request import urlopen
+
 from bs4 import BeautifulSoup
 
 from app.models import Movie
@@ -24,3 +26,11 @@ def scrape_movies():
         Movie.save(**movie)
 
     return movies
+
+
+def get_earliest_movie_time(movie_time):
+    days = ['MON', 'TUE', 'WED', 'THUR', 'FRI']
+
+    day = re.search(r'{}'.format('|'.join(days)), str(movie_time)).group()
+    start_time = re.search(r'\d+:\d+', str(movie_time)).group()
+    return days.index(day), start_time
