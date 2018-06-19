@@ -21,13 +21,19 @@ class MovieTestCase(unittest.TestCase):
         assert res.status_code == 200
         result = get_json(res)
         assert len(result) > 1
+        self.movie1 = result[0]
+
+    def get_first_movie(self):
+        """Gets the first movie in database for testing."""
+        return get_json(self.client.get('/movies'))[0]
 
     def test_get_a_movie(self):
         """Test getting a particular movie."""
+        movie1 = self.get_first_movie()
         res = self.client.get('/movies/1')
         assert res.status_code == 200
         result = get_json(res)
-        assert len(result) == 5
+        assert result == movie1
 
     def test_get_invalid_movie(self):
         """Test getting a non-existent movie"""
@@ -35,6 +41,14 @@ class MovieTestCase(unittest.TestCase):
         assert res.status_code == 404
         result = get_json(res)
         assert result['message'] == 'Movie not found.'
+
+    def test_search_movies_by_title(self):
+        """Test searching for movies by name."""
+        movie1 = self.get_first_movie()
+        res = self.client.get('/movies?q={}'.format(movie1['name']))
+        assert res.status_code == 200
+        result = get_json(res)
+        assert result[0] == movie1
 
 
 if __name__ == "__main__":
