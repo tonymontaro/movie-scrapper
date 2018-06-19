@@ -1,7 +1,7 @@
 """Application entry point."""
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -10,8 +10,8 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 from config import app_config
-from app.api.routes import api_bp
-from app.auth.routes import auth_bp
+from app.movies.routes import movies_bp
+from app.movies.helper import scrape_movies
 
 
 def create_app(env):
@@ -23,8 +23,13 @@ def create_app(env):
     Migrate(app, db)
     login_manager.init_app(app)
 
-    app.register_blueprint(api_bp)
-    app.register_blueprint(auth_bp, url_prefix='/users')
+    app.register_blueprint(movies_bp, url_prefix='/movies')
+
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def catch_all(path):
+        """Homepage and default page."""
+        return jsonify({'message': 'Welcome to movie-scrapper API.'})
 
     return app
 
