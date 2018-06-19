@@ -38,8 +38,8 @@ def get_earliest_movie_time(movie_time):
     days = ['MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT', 'SUN']
 
     day = re.search(r'{}'.format('|'.join(days)), str(movie_time)).group()
-    start_time = re.search(r'\d+:\d+', str(movie_time)).group()
-    return days.index(day), start_time
+    start = re.search(r'(\d+):(\d+)(AM|PM)', str(movie_time)).groups()
+    return days.index(day), start[2], int(start[0]), int(start[1])
 
 
 def schedule_scrapping():
