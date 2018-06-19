@@ -75,6 +75,11 @@ class MovieTestCase(unittest.TestCase):
         sorted_result_names = [x['name'] for x in sorted_result]
         assert [x['name'] for x in result] == sorted_result_names
 
+    def test_homepage(self):
+        """Test home route."""
+        res = self.client.get('/')
+        assert res.status_code == 200
+
     @classmethod
     def tearDownClass(cls):
         with cls.app.app_context():
