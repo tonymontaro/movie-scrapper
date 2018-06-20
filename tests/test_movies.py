@@ -28,7 +28,7 @@ class MovieTestCase(unittest.TestCase):
         res = self.client.get('/movies')
         assert res.status_code == 200
         result = get_json(res)
-        assert len(result) == 10
+        assert len(result) > 1
         self.movie1 = result[0]
 
     def get_first_movie(self):
