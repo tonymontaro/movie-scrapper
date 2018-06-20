@@ -12,6 +12,11 @@ class DBHelper(object):
         db.session.add(item)
         db.session.commit()
 
+    @staticmethod
+    def refresh_db():
+        db.drop_all()
+        db.create_all()
+
 
 class Movie(db.Model):
     """Movie model."""

@@ -11,7 +11,7 @@ login_manager = LoginManager()
 
 from config import app_config
 from app.movies.routes import movies_bp
-from app.movies.helper import scrape_movies, schedule_scrapping
+from app.movies.helper import schedule_scrapping
 
 
 def create_app(env):

@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 
-from app.models import Movie
+from app.models import Movie, DBHelper
 
 
 def scrape_movies():
@@ -26,7 +26,7 @@ def scrape_movies():
             'details': movie.find('div', attrs={'class': 'desc-mv'}).text
         } for movie in movies
     ]
-
+    DBHelper.refresh_db()
     for movie in movies:
         Movie.save(**movie)
 
