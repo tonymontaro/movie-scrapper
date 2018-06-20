@@ -49,8 +49,9 @@ class Movie(db.Model):
 
     @staticmethod
     def find(query):
-        """Find movies by search key."""
-        movies = Movie.query.filter(Movie.name.contains(query)).all()
+        """Find movies by search key ."""
+        movies = Movie.query.filter(
+            Movie.name.ilike('%{}%'.format(query))).all()
         return movies
 
     def get_content(self):
