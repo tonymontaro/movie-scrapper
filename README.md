@@ -33,12 +33,22 @@ Requirements
 - Mac OS X, Windows or Linux
 - Python 3.6
 
-### Installation
-- Clone this repository and cd into the root folder:
+Clone this repository and cd into the root folder:
 
 ```bash
 git clone https://github.com/tonymontaro/movie-scrapper.git && cd movie-scrapper
 ```
+
+### Installation
+
+#### Install with Docker
+- Run:
+```bash
+docker-compose up
+```
+- Visit: http://localhost:8080
+
+#### Normal Installation
 
 - Create and activate a virtual environment in python3:
 

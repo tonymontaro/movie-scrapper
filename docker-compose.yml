@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: bash -c "flask run --host=0.0.0.0 --port=8080"
+    container_name: movie_scrapper
+    volumes:
+      - .:/scrapper
+    ports:
+      - "8080:8080"
